@@ -7,6 +7,8 @@
 // email: anzhilov.s@northeastern.edu
 // Spring, 2025
 
+// This program handles command-line input and performs encryption 
+// or decryption using the Polybius Square cipher.
 
 #define MAX_TEXT_LENGTH 256
 
