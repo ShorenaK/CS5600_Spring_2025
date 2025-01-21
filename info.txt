@@ -8,3 +8,54 @@ https://posit.co/download/rstudio-desktop/
 
 Kai Yee Wan (he/him) 
 kywan@ccs.neu.edu
+
+
+Tar commednlines:
+
+tar -cvf userid-cs5600-s25-week3.tar genrand.c polybius.c polybius.h cipher.c Makefile
+
+Run:
+Create tar:
+tar -cvf userid-cs5600-s25-week3.tar genrand.c polybius.c polybius.h cipher.c Makefile
+Verify contents:
+
+Run:
+tar -tvf userid-cs5600-s25-week3.tar
+Extract tar:
+
+Run:
+tar -xvf userid-cs5600-s25-week3.tar
+Test after extraction:
+
+Run:
+make
+./cipher -e "test message"
+./genrand 10 output.txt
+
+
+
+Tar :
+
+
+Step 2: Update the Existing .tar Archive
+After modifying cipher.c, update the tar archive without recreating it:
+
+tar -rvf userid-cs5600-s25-week3.tar cipher.c
+Explanation of options:
+
+-r: Append or replace the updated file inside the tar archive.
+-v: Verbose mode (shows progress).
+-f: Specifies the archive filename.
+Step 3: Verify the Update
+Once you've updated the archive, check its contents to ensure cipher.c is included:
+
+
+tar -tvf userid-cs5600-s25-week3.tar
+You should see the updated timestamp next to cipher.c.
+
+Step 4: Test the Updated Archive
+To ensure your updates are correct, you can extract the files and verify the changes:
+
+tar -xvf userid-cs5600-s25-week3.tar
+cat cipher.c
+This will display the contents of cipher.c to confirm your comments were added successfully.
