@@ -63,13 +63,17 @@ void pbDecode(const char *ciphertext, char *decodedText) {
     int length = strlen(ciphertext);
     int index = 0;
 
-    for (int i = 0; i < length; i += 2) {
-        if (isdigit(ciphertext[i]) && isdigit(ciphertext[i+1])) {
+    for (int i = 0; i < length; i++) {
+        if (ciphertext[i] == '0') {
+            // Restore space
+	    decodedText[index++] = ' ';  
+        } else if (isdigit(ciphertext[i]) && isdigit(ciphertext[i+1])) {
             int row = ciphertext[i] - '1';
             int col = ciphertext[i+1] - '1';
             decodedText[index++] = polybiusSquare[row][col];
+            // Skip the next digit since it's part of the same letter
+	    i++;  
         }
     }
     decodedText[index] = '\0';
 }
-
