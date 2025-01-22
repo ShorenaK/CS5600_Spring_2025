@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // name: Shorena K. Anzhilov
 // email: anzhilov.s@northeastern.com
@@ -61,10 +62,10 @@ void read_file_and_store_blocks(const char *filename) {
         int count = 0;
 
         // Read integers from the line
-        char *token = strtok(line, " ");
+        char *token = strtok(line, " /n");
         while (token != NULL && count < MAX_LINE_LENGTH) {
             numbers[count++] = atoi(token);
-            token = strtok(NULL, " ");
+            token = strtok(NULL, " /n");
         }
 
         // Allocate dynamic block for the read integers
