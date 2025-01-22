@@ -59,3 +59,90 @@ To ensure your updates are correct, you can extract the files and verify the cha
 tar -xvf userid-cs5600-s25-week3.tar
 cat cipher.c
 This will display the contents of cipher.c to confirm your comments were added successfully.
+
+REMOVE The Tar:
+rm anzhilov.s-cs5600-s25-week3.tar
+
+
+if you want to confirm which files are executables before deleting:
+ls -l | grep '^-rwx'  # Lists only executable files
+
+
+Verify the Contents of the .tar File
+Use the following command to list the contents of the archive and check that no executable files (such as cipher, genrand, etc.) are included:
+
+tar -tvf anzhilov.s-cs5600-s25-week3.tar
+
+-rw-r--r--  0 shorenaanzhilov staff     264 Jan 21 14:23 Makefile
+-rw-r--r--  0 shorenaanzhilov staff     950 Jan 21 14:47 cipher.c
+-rw-r--r--  0 shorenaanzhilov staff    1511 Jan 21 13:41 genrand.c
+-rw-r--r--  0 shorenaanzhilov staff    2078 Jan 21 13:21 polybius.c
+-rw-r--r--  0 shorenaanzhilov staff     417 Jan 21 14:28 polybius.h
+
+
+How to Use the Updated Makefile
+Compile both programs:
+
+
+make all
+
+Compile a specific program:
+
+
+make cipher
+make genrand
+
+Clean up the compiled files:
+
+
+make clean
+
+
+
+Testing Your Setup -----> 
+Once the Makefile is updated, test by:
+
+Running the build:
+
+
+Checking the created executables:
+
+
+ls -l cipher genrand
+Running the programs:
+
+
+./cipher -e "test"
+./genrand 10 output.txt
+
+
+
+ls
+Expected files:
+
+
+Makefile
+cipher.c
+genrand.c
+polybius.c
+polybius.h
+
+
+Run make to compile and test:
+
+
+make
+./cipher -e "test"
+./genrand 10 output.txt
+Clean up executables before submission:
+
+
+make clean
+Create the tar archive for submission:
+
+
+tar -cvf userid-cs5600-s25-week3.tar Makefile cipher.c genrand.c polybius.c polybius.h
+Verify the tar archive:
+
+
+tar -tvf userid-cs5600-s25-week3.tar
