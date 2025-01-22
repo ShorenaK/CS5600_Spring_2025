@@ -17,6 +17,17 @@ void printUsage(const char *programName) {
     printf("       %s -d \"encrypted text\"\n", programName);
 }
 
+// Function to add spaces back to decoded text (assuming space encoding rule)
+void addSpacesToDecodedText(char *decodedText) {
+    int length = strlen(decodedText);
+    for (int i = 0; i < length; i++) {
+	// Assuming underscore represents space in encoding
+        if (decodedText[i] == '_') { 
+            decodedText[i] = ' ';
+        }
+    }
+}
+
 int main(int argc, char *argv[]) {
     if (argc != 3) {
         printUsage(argv[0]);
@@ -30,6 +41,8 @@ int main(int argc, char *argv[]) {
         printf("Encoded: %s\n", result);
     } else if (strcmp(argv[1], "-d") == 0) {
         pbDecode(argv[2], result);
+ 	// Restore spaces after decoding
+ 	addSpacesToDecodedText(result);  
         printf("Decoded: %s\n", result);
     } else {
         printUsage(argv[0]);
@@ -38,4 +51,3 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
-
