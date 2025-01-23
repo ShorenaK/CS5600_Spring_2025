@@ -1,8 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// name: Shorena K. Anzhilov
-// email: anzhilov.s@northeastern.com
+/*
+* allocmem.c / Practice Assignment / Memory Layout and Memory Management
+*
+* Shorena K. Anzhilov / CS5600 / Northeastern University
+* Spring 2025 / Jan , 2025 
+*
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
