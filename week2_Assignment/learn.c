@@ -1,8 +1,7 @@
 /*
 * learn.c / Practice Assignment / Program C
 *
-* Paws Husky / CS5600 / Northeastern University
-* Student: Shorena K. Anzhilov
+* Shorena K. Anzhilov / CS5600 / Northeastern University
 * Spring 2025 / Jan  8, 2025 
 *
 */
