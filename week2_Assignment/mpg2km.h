@@ -1,8 +1,7 @@
 /*
  * mpg2km.h / Practice Assignment
  *
- * Paws Husky / CS5600 / Northeastern University
- * Shorena K. Anzhilov
+ * Shorena K. Anzhilov / CS5600 / Northeastern University
  * Spring 2025 / Jan, 2025
  *
  * This header file contains function declarations for mileage conversion.
