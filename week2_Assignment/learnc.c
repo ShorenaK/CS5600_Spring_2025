@@ -11,9 +11,9 @@
 
 int main() {
     // Test cases with valid values
-    double mpg1 = 30.0;
-    double mpg2 = 15.0;
-    double lph = 7.8;
+    double mpg1 = 50.0;
+    double mpg2 = 11.0;
+    double lph = 8.8;
 
     printf("Converting 30 MPG to KML: %.2f km/l\n", mpg2kml(mpg1));
     printf("Converting 30 MPG to LPHM: %.2f l/100km\n", mpg2lphm(mpg1));
