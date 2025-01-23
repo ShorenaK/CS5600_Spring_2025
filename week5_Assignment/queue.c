@@ -1,7 +1,7 @@
 #include "queue.h"
 
 /*
-* loadmem.c / Practice Assignment / Program Execution and Process Queue
+* queue.c / Practice Assignment / Program Execution and Process Queue
 *
 * Shorena K. Anzhilov / CS5600 / Northeastern University
 * Spring 2025 / Jan , 2025 
