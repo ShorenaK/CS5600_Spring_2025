@@ -42,12 +42,6 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    int numRandoms = atoi(argv[1]);
-    if (numRandoms <= 0) {
-        fprintf(stderr, "Error: The number of random values must be greater than 0.\n");
-        return 1;
-    } 
-
     int numStrings = atoi(argv[1]);
     if (numStrings <= 0) {
         fprintf(stderr, "Error: The number of strings must be greater than 0.\n");
