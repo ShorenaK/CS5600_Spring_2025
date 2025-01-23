@@ -2,9 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-// name: Shorena K. Anzhilov
-// email: anzhilov.s@northeastern.com
-// Spring,  2025 
+/*
+* loadmem.c / Practice Assignment / Memory Layout and Memory Management
+*
+* Shorena K. Anzhilov / CS5600 / Northeastern University
+* Spring 2025 / Jan , 2025 
+*
+*/
 
 // Maximum length of each line in the file
 #define MAX_LINE_LENGTH 1024  
