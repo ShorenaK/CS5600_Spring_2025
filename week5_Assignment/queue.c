@@ -1,8 +1,12 @@
 #include "queue.h"
 
-// name: Shorena K. Anzhilov
-// email: anzhilov.s@northeastern.edu
-// Spring, 2025
+/*
+* loadmem.c / Practice Assignment / Program Execution and Process Queue
+*
+* Shorena K. Anzhilov / CS5600 / Northeastern University
+* Spring 2025 / Jan , 2025 
+*
+*/
 
 // Function to add an element to the end of the queue
 void push_queue(queue_t* queue, void* element) {
