@@ -1,0 +1,19 @@
+#!/bin/bash
+
+echo "Testing uppercase conversion:"
+./arger -u "assignment in c"
+
+echo "Testing lowercase conversion:"
+./arger -l "ASSIGNMENT IN C"
+
+echo "Testing capitalization:"
+./arger -cap "practice ASSIGNMENT"
+
+echo "Testing invalid input:"
+./arger -x "this should fail"
+
+if [ $? -ne 0 ]; then
+    echo "An error occurred with invalid input."
+else
+    echo "Command executed successfully."
+fi
