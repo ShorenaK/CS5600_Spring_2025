@@ -1,5 +1,5 @@
 /*
-* learn.c / Practice Assignment / Program C
+* mpgkm.c / Practice Assignment / Program C
 *
 * Paws Husky / CS5600 / Northeastern University
 * Student: Shorena K. Anzhilov
