@@ -3,10 +3,16 @@
 #include <string.h>
 #include "polybius.h"
 
-// name: Shorena K. Anzhilov
-// email: anzhilov.s@northeastern.edu
-// Spring, 2025
+/*
+* cipher.c / Practice Assignment / Random Number Generation and Encryption
+*
+* Shorena K. Anzhilov / CS5600 / Northeastern University
+* Spring 2025 / Jan , 2025 
+*
+*/
 
+// This program handles command-line input and performs encryption 
+// or decryption using the Polybius Square cipher.
 
 #define MAX_TEXT_LENGTH 256
 

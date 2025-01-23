@@ -1,7 +1,10 @@
-// name: Shorena K. Anzhilov
-// email: anzhilov.s@northeastern.edu
-// Spring, 2025
-
+/*
+* polybius.h / Practice Assignment / Random Number Generation and Encryption
+*
+* Shorena K. Anzhilov / CS5600 / Northeastern University
+* Spring 2025 / Jan , 2025 
+*
+*/
 #ifndef POLYBIUS_H
 #define POLYBIUS_H
 
