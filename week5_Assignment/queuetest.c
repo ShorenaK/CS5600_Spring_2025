@@ -2,9 +2,13 @@
 #include <stdlib.h>
 #include "queue.h"
 
-// name: Shorena K. Anzhilov
-// email: anzhilov.s@northeastern.edu
-// Spring, 2025
+/*
+* queuetest.c / Practice Assignment / Program Execution and Process Queue
+*
+* Shorena K. Anzhilov / CS5600 / Northeastern University
+* Spring 2025 / Jan , 2025 
+*
+*/
 
 // Main function to test the queue operations
 int main() {
