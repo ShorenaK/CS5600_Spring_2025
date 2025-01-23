@@ -3,10 +3,13 @@
 #include <string.h>
 #include <time.h>
 
-// name: Shorena K. Anzhilov
-// email: anzhilov.s@northeastern.edu
-// Spring, 2025
-
+/*
+* genrand.c / Practice Assignment / Random Number Generation and Encryption
+*
+* Shorena K. Anzhilov / CS5600 / Northeastern University
+* Spring 2025 / Jan , 2025 
+*
+*/
 
 // Linear Congruential Generator parameters
 #define A 1664525
