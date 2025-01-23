@@ -4,10 +4,13 @@
 #include <ctype.h>
 #include "polybius.h"
 
-// name: Shorena K. Anzhilov
-// email: anzhilov.s@northeastern.edu
-// Spring, 2025
-
+/*
+* polybius.c / Practice Assignment / Random Number Generation and Encryption
+*
+* Shorena K. Anzhilov / CS5600 / Northeastern University
+* Spring 2025 / Jan , 2025 
+*
+*/
 
 // Polybius square definition
 char polybiusSquare[5][5] = {
