@@ -11,7 +11,7 @@
 #include "queue.h"
 
 // Function to create a new queue
-Queue* createQueue() {
+Queue* createQueue(void) {
     Queue *q = (Queue*)malloc(sizeof(Queue));
     if (!q) {
         fprintf(stderr, "Error: Memory allocation failed for queue\n");

@@ -27,7 +27,7 @@ typedef struct {
 } Queue;
 
 // Function prototypes
-Queue* createQueue();
+Queue* createQueue(void);
 void enqueue(Queue *q, const char *word);
 char* dequeue(Queue *q);
 int isEmpty(Queue *q);
