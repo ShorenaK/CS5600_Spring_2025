@@ -14,7 +14,10 @@
 #define MAX_TEXT_LENGTH 256
 
 int main(int argc, char *argv[]) {
-    char input[MAX_TEXT_LENGTH];
+	(void)argc;
+	(void)argv;
+
+    	char input[MAX_TEXT_LENGTH];
 
     while (fgets(input, sizeof(input), stdin)) {
         char result[MAX_TEXT_LENGTH];
