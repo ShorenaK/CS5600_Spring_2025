@@ -15,7 +15,7 @@
 // Static memory allocation (5 MB)
 static char static_memory[5 * 1024 * 1024]; 
 
-int main() {
+int main(void) {
     // Stack memory allocation (1 MB)
     char stack_memory[1 * 1024 * 1024]; 
 
@@ -57,5 +57,3 @@ int main() {
 
     return 0;
 }
-
-

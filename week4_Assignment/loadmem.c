@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "loadmem.h"
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "loadmem.h"
 
 
 /*
@@ -15,12 +15,6 @@
 
 // Maximum length of each line in the file
 #define MAX_LINE_LENGTH 1024  
-
-// Structure to store dynamic block of integers
-typedef struct {
-    int *data;  
-    int size;   
-} dyn_block;
 
 // Function to allocate memory for a dyn_block of given size
 dyn_block* alloc_dyn_block(int size) {
@@ -101,7 +95,7 @@ void read_file_and_store_blocks(const char *filename) {
     fclose(file);
 }
 
-int main() {
+int main(void) {
     // Provide the filename (ensure the file exists in the same directory)
     const char *filename = "blocks.data";
 
