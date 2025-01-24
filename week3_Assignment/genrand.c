@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
 
     for (int i = 0; i < numRandoms; i++) {
 	// Generate random number in range [1,100]
-        int randomNum = genRand(1, 1000);  
+        int randomNum = genRand(1, 100);  
         fprintf(file, "%d\n", randomNum);
     }
 
