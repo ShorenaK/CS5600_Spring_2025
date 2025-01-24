@@ -1,9 +1,8 @@
-
 /*
 * polybius.h / Practice Assignment / Multiprocessing in C
 *
 * Shorena K. Anzhilov / CS5600 / Northeastern University
-* Spring 2025
+* Spring 2025, Feb , 2025
 *
 */
 
