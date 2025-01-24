@@ -41,9 +41,16 @@ Step 2: To Process and Encrypt Strings, we run the process manager to read the s
 Expected Output:
 
 Words stored in queue:
-1x3x4c5x45v3cd4
-2x3x4c5x45v3cd4
-3x3x4c5x45v3cd4
+DOJMjelsLm
+FczGFgnuZU
+HapUDmpcTS
+RQrSZIDuxs
+zONIvSpADC
+ZIjyxwraZQ
+neBcnSBIHW
+BsnqdUXKVc
+fOVwzaZIzy
+REzalEjmhc
 so forth .....
 
 Processing complete. Encrypted files generated.  ---> This confirms that program is working. 
@@ -56,15 +63,19 @@ cat output_1.txt
 
 Step 4: To Decrypt a String, we can test the decryption of a specific encoded string, by using:
 
-echo "1231231234" | ./cipher -d
+echo "133432354544154200435443441532001331114343" | ./cipher -d Expected Output: COMPUTER SYSTEM CLASS
 
-Expected Output:
+or 
 
-HELLO WORLD
+echo "14342432241531433132" | ./cipher -d   Expected Output:   DOJMjelsLm
 
-To encrypt we run: echo "HELLO WORLD" | ./cipher -e
-Step 5: Clean Up and remove Compiled Files we run:
+To encrypt we run: 
 
-make clean
+echo "DOJMjelsLm" | ./cipher -e  Expected Output: 14342432241531433132
 
+or
+
+echo "Computer System Class" | ./cipher -e  Expected Output: 133432354544154200435443441532001331114343
+
+Step 5: Clean Up and remove Compiled Files we run:  make clean
 
