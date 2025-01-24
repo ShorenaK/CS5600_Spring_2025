@@ -1,6 +1,9 @@
 #include <stdio.h>
+#include "loadmem.h"
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+
 
 /*
 * loadmem.c / Practice Assignment / Memory Layout and Memory Management
@@ -66,10 +69,10 @@ void read_file_and_store_blocks(const char *filename) {
         int count = 0;
 
         // Read integers from the line
-        char *token = strtok(line, " /n");
+        char *token = strtok(line, " \n");
         while (token != NULL && count < MAX_LINE_LENGTH) {
             numbers[count++] = atoi(token);
-            token = strtok(NULL, " /n");
+            token = strtok(NULL, " \n");
         }
 
         // Allocate dynamic block for the read integers
@@ -101,6 +104,11 @@ void read_file_and_store_blocks(const char *filename) {
 int main() {
     // Provide the filename (ensure the file exists in the same directory)
     const char *filename = "blocks.data";
+
+    if (access(filename, F_OK) != 0) {
+    printf("Error: File %s not found.\n", filename);
+    return 1;
+	}	
     
     printf("Reading and storing integers from file: %s\n", filename);
     read_file_and_store_blocks(filename);
