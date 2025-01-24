@@ -5,10 +5,10 @@
 #include "polybius.h"
 
 /*
-* polybius.c / Practice Assignment / Random Number Generation and Encryption
+* polybius.c / Practice Assignment / Multiprocessing in C
 *
 * Shorena K. Anzhilov / CS5600 / Northeastern University
-* Spring 2025 / Jan , 2025 
+* Spring 2025
 *
 */
 
