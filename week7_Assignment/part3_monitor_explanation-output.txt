@@ -1,0 +1,78 @@
+In 3rd  part of the assignment, I modified the producer consumer problem to use monitors with condition variables. 
+The buffer size was increased to 15, and multiple producer and consumer threads were added to handle concurrency.
+
+### Follwing Changes were Made:
+1. Increased buffer size to 15.
+2. Added two producer threads and two consumer threads.
+3. Used mutex and condition variables to synchronize the threads.
+4. Implemented counters to track the total produced and consumed items.
+5. Exited producer threads after producing 30 items.
+6. Exited consumer threads after consuming 30 items.
+7. Added print statements to monitor buffer usage over time.
+
+### Observations are following:
+- The producers wait when the buffer is full, and consumers wait when it is empty.
+- Synchronization works well with condition variables to ensure data consistency.
+- Thread scheduling by the operating system introduces non-deterministic behavior in the output order.
+
+### In Summery:
+This implementation demonstrates how monitors help in controlling thread execution 
+using condition variables and mutexes to avoid data corruption and race conditions. 
+
+
+## Output:
+
+Produced: 0 (Buffer size: 1) | Total Produced: 1
+Consumed: 0 (Buffer size: 0) | Total Consumed: 1
+Produced: 0 (Buffer size: 1) | Total Produced: 2
+Consumed: 0 (Buffer size: 0) | Total Consumed: 2
+Produced: 1 (Buffer size: 1) | Total Produced: 3
+Produced: 1 (Buffer size: 2) | Total Produced: 4
+Produced: 2 (Buffer size: 3) | Total Produced: 5
+Produced: 2 (Buffer size: 4) | Total Produced: 6
+Consumed: 2 (Buffer size: 3) | Total Consumed: 3
+Consumed: 2 (Buffer size: 2) | Total Consumed: 4
+Produced: 3 (Buffer size: 3) | Total Produced: 7
+Produced: 3 (Buffer size: 4) | Total Produced: 8
+Produced: 4 (Buffer size: 5) | Total Produced: 9
+Produced: 4 (Buffer size: 6) | Total Produced: 10
+Produced: 5 (Buffer size: 7) | Total Produced: 11
+Produced: 5 (Buffer size: 8) | Total Produced: 12
+Consumed: 5 (Buffer size: 7) | Total Consumed: 5
+Consumed: 5 (Buffer size: 6) | Total Consumed: 6
+Produced: 6 (Buffer size: 7) | Total Produced: 13
+Produced: 6 (Buffer size: 8) | Total Produced: 14
+Produced: 7 (Buffer size: 9) | Total Produced: 15
+Produced: 7 (Buffer size: 10) | Total Produced: 16
+Produced: 8 (Buffer size: 11) | Total Produced: 17
+Produced: 8 (Buffer size: 12) | Total Produced: 18
+Consumed: 8 (Buffer size: 11) | Total Consumed: 7
+Consumed: 8 (Buffer size: 10) | Total Consumed: 8
+Produced: 9 (Buffer size: 11) | Total Produced: 19
+Produced: 9 (Buffer size: 12) | Total Produced: 20
+Produced: 10 (Buffer size: 13) | Total Produced: 21
+Produced: 10 (Buffer size: 14) | Total Produced: 22
+Produced: 11 (Buffer size: 15) | Total Produced: 23
+Consumed: 11 (Buffer size: 14) | Total Consumed: 9
+Produced: 11 (Buffer size: 15) | Total Produced: 24
+Consumed: 11 (Buffer size: 14) | Total Consumed: 10
+Produced: 12 (Buffer size: 15) | Total Produced: 25
+Consumed: 12 (Buffer size: 14) | Total Consumed: 11
+Consumed: 10 (Buffer size: 13) | Total Consumed: 12
+Produced: 12 (Buffer size: 14) | Total Produced: 26
+Produced: 13 (Buffer size: 15) | Total Produced: 27
+Consumed: 13 (Buffer size: 14) | Total Consumed: 13
+Consumed: 12 (Buffer size: 13) | Total Consumed: 14
+Produced: 13 (Buffer size: 14) | Total Produced: 28
+Produced: 14 (Buffer size: 15) | Total Produced: 29
+Consumed: 14 (Buffer size: 14) | Total Consumed: 15
+Consumed: 13 (Buffer size: 13) | Total Consumed: 16
+Produced: 15 (Buffer size: 14) | Total Produced: 30
+Produced 30 items. Exiting producer.
+Produced: 14 (Buffer size: 15) | Total Produced: 31
+Produced 30 items. Exiting producer.
+Consumed: 14 (Buffer size: 14) | Total Consumed: 17
+Consumed: 15 (Buffer size: 13) | Total Consumed: 18
+Consumed: 10 (Buffer size: 12) | Total Consumed: 19
+Consumed: 9 (Buffer size: 11) | Total Consumed: 20
+WE ARE DONE
