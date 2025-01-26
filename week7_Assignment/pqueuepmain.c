@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
+#include "pqueuepmain.h"
 
 /*
 * pqueuepmain.c / Practice Assignment / Complex Synchronization
@@ -10,24 +11,6 @@
 * Spring 2025 / Feb , 2025
 *
 */
-
-// Buffer capacity updated to 15 & Target production and consumption count
-
-#define BUF_SIZE 15  
-#define TOTAL_ITEMS 30  
-
-// Shared buffer and counters
-int buffer[BUF_SIZE];
-int num = 0; 
-// Track total produced items
-int total_produced = 0;  
-// Track total consumed items
-int total_consumed = 0;  
-
-// Mutex for critical section
-pthread_mutex_t mut;  
-// Condition variable for synchronization
-pthread_cond_t cond;  
 
 void *producer(void *param);
 void *consumer(void *param);
