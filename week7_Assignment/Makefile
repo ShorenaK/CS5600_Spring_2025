@@ -8,7 +8,7 @@ CFLAGS = -Wall -Wextra -pedantic -std=c99 -pthread
 all: pqueuepmain multithread
 
 # Build the producer-consumer executable
-pqueuepmain: pqueuepmain.c
+pqueuepmain: pqueuepmain.c pqueuepmain.h
 	$(CC) $(CFLAGS) -o pqueuepmain pqueuepmain.c
 
 # Build the multithreading example executable
