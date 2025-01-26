@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <pthread.h>
 
 /*
@@ -10,11 +11,6 @@
 *
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <pthread.h>
-
 #define SIZE 5  // Define the size of the shared array
 
 // Global shared data array
@@ -24,8 +20,10 @@ int shared_data[SIZE];
 void *writer_thread(void *arg) {
     printf("Writer thread is adding data...\n");
     for (int i = 0; i < SIZE; i++) {
-        shared_data[i] = i * 10;  // Write different values into the array
-        usleep(100000);  // Simulate processing time
+        // Write different values into the array
+        shared_data[i] = i * 10; 
+        // Simulate processing time
+        usleep(100000);  
         printf("Writer added: %d at index %d\n", shared_data[i], i);
     }
     printf("Writer thread finished\n");
@@ -36,7 +34,8 @@ void *writer_thread(void *arg) {
 void *reader_thread(void *arg) {
     printf("Reader thread is reading data...\n");
     for (int i = 0; i < SIZE; i++) {
-        usleep(150000);  // Simulate delay to observe possible inconsistencies
+        // Simulate delay to observe possible inconsistencies
+        usleep(150000);  
         printf("Reader read: %d from index %d\n", shared_data[i], i);
     }
     printf("Reader thread finished\n");
@@ -57,14 +56,15 @@ int main(void) {
         printf("Error creating reader thread\n");
         return 1;
     }
-
-    sleep(1);  // Let threads run for a while
+    // Let threads run for a while
+    sleep(1);  
 
     // Step 2: Cancel the reader thread and print its ID
     printf("====> Cancelling Reader Thread (ID: %p)!!\n", (void *)reader);
     pthread_cancel(reader);
 
-    usleep(100000);  // Small delay for message ordering
+    // Small delay for message ordering
+    usleep(100000);  
 
     // Step 2: Cancel the writer thread and print its ID
     printf("====> Cancelling Writer Thread (ID: %p)!!\n", (void *)writer);
