@@ -5,12 +5,6 @@
 #define BUF_SIZE 15  
 #define TOTAL_ITEMS 30  
 
-// Mutex for critical section
-pthread_mutex_t mut;  
-// Condition variable for synchronization
-pthread_cond_t cond;  
-
-
 // Shared buffer and counters
 extern int buffer[BUF_SIZE];
 extern int num;
