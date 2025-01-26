@@ -12,6 +12,24 @@
 *
 */
 
+// Buffer to store produced items, with a fixed size defined by BUF_SIZE
+int buffer[BUF_SIZE];
+
+// Variable to keep track of the number of items currently in the buffer
+int num = 0;
+
+// Counter to track the total number of items produced
+int total_produced = 0;
+
+// Counter to track the total number of items consumed
+int total_consumed = 0;
+
+// Mutex to control access to shared resources, preventing race conditions
+pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER;
+
+// Condition variable to synchronize producer and consumer threads
+pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+
 void *producer(void *param);
 void *consumer(void *param);
 
