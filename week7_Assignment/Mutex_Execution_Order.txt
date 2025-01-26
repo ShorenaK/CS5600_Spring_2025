@@ -1,0 +1,82 @@
+Exploring Mutexes!
+
+In this part, we analyze the given meetup() function which uses a mutex and condition variable to control thread execution. The function increases a counter and makes threads wait until the count reaches a specific value before they can continue.
+
+Given Scenario
+
+Initial count = 0
+
+At time 0.0, Thread A calls meetup().
+
+At time 1.0, Threads B and C call meetup(), and they race to enter the monitor.
+
+Meetup Function:
+
+1      mutex m
+2      condition C
+3      int count = 0
+
+     meetup():
+4      m.lock()
+5      # return from call to m.lock()
+6      count = count + 1
+7      if count < 3:
+7.1        wait(C, m)
+       else:
+7.2        signal(C)
+8      count = 0
+9      m.unlock()
+
+Possible Execution Orders
+
+Order 1: Thread B enters first
+
+0.0 A 4    (Thread A locks the mutex)
+0.0 A 6    (count = 1)
+0.0 A 7.1  (Thread A waits)
+1.0 B 4    (Thread B locks the mutex)
+1.0 B 6    (count = 2)
+1.0 B 7.1  (Thread B waits)
+1.0 C 4    (Thread C locks the mutex)
+1.0 C 6    (count = 3)
+1.0 C 7.2  (Thread C signals)
+1.0 C 8    (count = 0)
+1.0 C 9    (Thread C unlocks the mutex)
+1.1 A 8    (Thread A resumes, count = 0)
+1.1 A 9    (Thread A unlocks the mutex)
+1.1 B 8    (Thread B resumes, count = 0)
+1.1 B 9    (Thread B unlocks the mutex)
+
+Order 2: Thread C enters first
+
+0.0 A 4    (Thread A locks the mutex)
+0.0 A 6    (count = 1)
+0.0 A 7.1  (Thread A waits)
+1.0 C 4    (Thread C locks the mutex)
+1.0 C 6    (count = 2)
+1.0 C 7.1  (Thread C waits)
+1.0 B 4    (Thread B locks the mutex)
+1.0 B 6    (count = 3)
+1.0 B 7.2  (Thread B signals)
+1.0 B 8    (count = 0)
+1.0 B 9    (Thread B unlocks the mutex)
+1.1 A 8    (Thread A resumes, count = 0)
+1.1 A 9    (Thread A unlocks the mutex)
+1.1 C 8    (Thread C resumes, count = 0)
+1.1 C 9    (Thread C unlocks the mutex)
+
+Observations
+
+The order of execution depends on which thread acquires the lock first.
+
+The mutex ensures that only one thread can modify count at a time.
+
+The condition variable forces threads to wait until count reaches 3.
+
+There is non-determinism since B and C race to enter the monitor.
+
+Conclusion
+
+This scenario shows how threads interact using a mutex and condition variable. It also highlights how non-determinism affects execution, and how synchronization tools help in managing concurrent execution safely.
+
+
