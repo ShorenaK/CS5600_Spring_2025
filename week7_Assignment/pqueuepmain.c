@@ -33,6 +33,9 @@ void *producer(void *param);
 void *consumer(void *param);
 
 int main(int argc, char *argv[]) {
+    (void)argc;  
+    (void)argv; 
+
     // Two producer and two consumer threads
     pthread_t producers[2], consumers[2];  
 
@@ -81,6 +84,7 @@ int main(int argc, char *argv[]) {
 
 // Producer thread function
 void *producer(void *param) {
+    (void)param;
     int i = 0;
     while (1) {
 	// Lock before accessing shared resource
@@ -112,6 +116,7 @@ void *producer(void *param) {
 
 // Consumer thread function
 void *consumer(void *param) {
+    (void)param;
     int item;
     while (1) {
 	// Lock before accessing shared resource

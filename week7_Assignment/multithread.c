@@ -18,6 +18,8 @@ int shared_data[SIZE];
 
 // Function for the writing thread
 void *writer_thread(void *arg) {
+    (void)arg;
+
     printf("Writer thread is adding data...\n");
     for (int i = 0; i < SIZE; i++) {
         // Write different values into the array
@@ -32,7 +34,9 @@ void *writer_thread(void *arg) {
 
 // Function for the reading thread
 void *reader_thread(void *arg) {
-    printf("Reader thread is reading data...\n");
+      (void)arg;
+
+       printf("Reader thread is reading data...\n");
     for (int i = 0; i < SIZE; i++) {
         // Simulate delay to observe possible inconsistencies
         usleep(150000);  
@@ -42,7 +46,10 @@ void *reader_thread(void *arg) {
     return NULL;
 }
 
-int main(void) {
+int main(int argc, char *argv[]) {
+    (void)argc;
+    (void)argv;
+	
     pthread_t writer, reader;
 
     // Step 1: Create the writer thread
