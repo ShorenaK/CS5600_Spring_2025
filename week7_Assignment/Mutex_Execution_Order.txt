@@ -27,7 +27,7 @@ Meetup Function:
 8      count = 0
 9      m.unlock()
 
-Possible Execution Orders
+Possible Execution Orders could be fowollowing:
 
 Order 1: Thread B enters first
 
@@ -65,18 +65,8 @@ Order 2: Thread C enters first
 1.1 C 8    (Thread C resumes, count = 0)
 1.1 C 9    (Thread C unlocks the mutex)
 
-Observations
+Observations are folwwoing : The order of execution depends on which thread acquires the lock first. The mutex ensures that only one thread can modify count at a time. The condition variable forces threads to wait until count reaches 3. There is non determinism since B and C race to enter the monitor.
 
-The order of execution depends on which thread acquires the lock first.
-
-The mutex ensures that only one thread can modify count at a time.
-
-The condition variable forces threads to wait until count reaches 3.
-
-There is non-determinism since B and C race to enter the monitor.
-
-Conclusion
-
-This scenario shows how threads interact using a mutex and condition variable. It also highlights how non-determinism affects execution, and how synchronization tools help in managing concurrent execution safely.
+Conclusion :  This scenario shows how threads interact using a mutex and condition variable. It also highlights how non determinism affects execution, and how synchronization tools help in managing concurrent execution safely.
 
 
