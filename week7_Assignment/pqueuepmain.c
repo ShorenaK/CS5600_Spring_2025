@@ -11,7 +11,6 @@
 *
 */
 
-
 // Buffer capacity updated to 15 & Target production and consumption count
 
 #define BUF_SIZE 15  
