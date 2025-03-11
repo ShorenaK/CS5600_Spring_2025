@@ -1,0 +1,5 @@
+Adding processes to the queue...
+Queue size after additions: 3
+Removed highest priority process: Process3
+Popped process: Process1
+Final queue size: 1
