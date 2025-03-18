@@ -1,16 +1,15 @@
-/*
-* queuetest.c / Practicum 1
-*
-* Shorena K. Anzhilov / CS5600 / Northeastern University
-* Spring 2025 / March , 2025
-* file name message.h
-*/
-
-
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
 #include <time.h>
+
+/*
+* message.h / Practicum 1
+*
+* Shorena K. Anzhilov / CS5600 / Northeastern University
+* Spring 2025 / March , 2025
+*
+*/
 
 // the Message structure
 // This structure represents a message with necessary fields: ID, time sent, sender, receiver, content, and delivered status.
