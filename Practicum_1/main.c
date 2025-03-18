@@ -12,7 +12,6 @@
 *
 */
 
-// main.c
 
 #include <stdio.h>
 #include "message.h"
