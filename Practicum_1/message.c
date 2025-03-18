@@ -1,18 +1,16 @@
-/*
-* Practicum 1
-*
-* Shorena K. Anzhilov / CS5600 / Northeastern University
-* Spring 2025 / March , 2025
-*
-* file name message.c
-*/
-// message.c
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include "message.h"
+
+/*
+* message.c / Practicum 1 
+*
+* Shorena K. Anzhilov / CS5600 / Northeastern University
+* Spring 2025 / March, 2025
+*
+*/
 
 Message* create_msg(int id, const char* sender, const char* receiver, const char* content) {
     Message* new_msg = (Message*)malloc(sizeof(Message));
