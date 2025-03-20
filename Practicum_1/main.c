@@ -15,7 +15,7 @@
 
 int main() {
     // Create a new message
-    Message* msg1 = create_msg(1, "Shorena", "Mike", "Good morning, Mike!", 0);
+    Message* msg1 = create_msg(1, "Shorena", "Mike", "Good morning, Mike!", 1);
     if (msg1 == NULL) {
         printf("Error: Failed to create message.\n");
         return -1;
