@@ -11,21 +11,23 @@
 *
 */
 
-// the Message structure
-// This structure represents a message with necessary fields: ID, time sent, sender, receiver, content, and delivered status.
-//
+/* Declares the Message structure and functions relaed to message handling.
+* This structure represents a message with necessary fields: ID, time sent, sender, receiver, content, and delivered status.
+*/
+
+// Defines a messagen structure
 typedef struct {
-    int id;               // Unique identifier
-    time_t time_sent;     // Time sent
-    char sender[100];     // Sender (text)
-    char receiver[100];   // Receiver (text)
-    char content[1000];   // Content of the message
-    int delivered;        // Flag indicating delivery status
+    int id;               
+    time_t time_sent;     
+    char sender[100];     
+    char receiver[100];   
+    char content[1000];   
+    int delivered;        
 } Message;
-// Function prototype
-Message* create_msg(int id, const char* sender, const char* receiver, const char* content);
-int store_msg(const Message* msg);
-Message* retrieve_msg(int id);
 
-#endif // MESSAGE_H
+// Function declarations
+Message* create_msg(int id, const char* sender, const char* receiver, const char* content, int delivered);
+void print_msg(Message* msg);
+void free_msg(Message* msg);
 
+#endif
