@@ -19,10 +19,18 @@ void store_msg(Message* msg) {
     FILE* file = fopen(MSG_FILE, "ab");
     if (!file) {
         printf("Error opening file for writing\n");
-        return;
+        // Error during file write
+        return -1;
     }
     fwrite(msg, sizeof(Message), 1, file);
     fclose(file);
+    
+    if (written != 1) {
+        printf("Error: Failed to write message to file.\n");
+        return -1; 
+    }
+    // Success
+    return 0; 
 }
 
 // Retrieves a message by ID from the file
