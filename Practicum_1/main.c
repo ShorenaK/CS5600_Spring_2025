@@ -1,7 +1,6 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include "message.h"
+#include "storage.h"
 
 
 /*
@@ -12,45 +11,41 @@
 *
 */
 
-
-#include <stdio.h>
-#include "message.h"
+// This file tests the entire system.
 
 int main() {
     // Create a new message
-    Message* msg1 = create_msg(1, "Alice", "Bob", "Hello, Bob!");
+    Message* msg1 = create_msg(1, "Shorena", "Mike", "Good morning, Mike!", 0);
     if (msg1 == NULL) {
-        printf("Failed to create message.\n");
+        printf("Error: Failed to create message.\n");
         return -1;
     }
 
     // Store the message
     if (store_msg(msg1) != 0) {
-        printf("Failed to store message.\n");
+        printf("Error: Failed to store message.\n");
+        free_msg(msg1);
         return -1;
     }
 
     printf("Message stored successfully.\n");
 
+    // Free the dynamically allocated message (already stored on disk)
+    free_msg(msg1);
+
     // Retrieve the message by ID
     Message* retrieved_msg = retrieve_msg(1);
     if (retrieved_msg == NULL) {
-        printf("Message not found.\n");
+        printf("Error: Message not found.\n");
         return -1;
     }
 
     // Display the retrieved message
-    printf("Message Retrieved:\n");
-    printf("ID: %d\n", retrieved_msg->id);
-    printf("Sender: %s\n", retrieved_msg->sender);
-    printf("Receiver: %s\n", retrieved_msg->receiver);
-    printf("Content: %s\n", retrieved_msg->content);
-    printf("Delivered: %d\n", retrieved_msg->delivered);
+    printf("\nMessage Retrieved:\n");
+    print_msg(retrieved_msg);
 
-    // Free dynamically allocated memory
-    free(msg1);
-    free(retrieved_msg);
+    // Free allocated memory for retrieved message
+    free_msg(retrieved_msg);
 
     return 0;
 }
-
