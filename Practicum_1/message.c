@@ -24,7 +24,7 @@ Message* create_msg(int id, const char* sender, const char* receiver, const char
         return NULL;
     }
     msg->id = id;
-    msg->sent_time = time(NULL);
+    msg->time_sent = time(NULL);
     strncpy(msg->sender, sender, sizeof(msg->sender) - 1);
     strncpy(msg->receiver, receiver, sizeof(msg->receiver) - 1);
     strncpy(msg->content, content, sizeof(msg->content) - 1);
@@ -39,7 +39,7 @@ void print_msg(Message* msg) {
         return;
     }
     printf("ID: %d\n", msg->id);
-    printf("Sent Time: %s", ctime(&msg->sent_time));
+    printf("Sent Time: %s", ctime(&msg->time_sent));
     printf("Sender: %s\n", msg->sender);
     printf("Receiver: %s\n", msg->receiver);
     printf("Content: %s\n", msg->content);
