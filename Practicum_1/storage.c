@@ -3,7 +3,7 @@
 #include "storage.h"
 
 /*
-* store.c / Practicum 1 
+* storage.c / Practicum 1 
 *
 * Shorena K. Anzhilov / CS5600 / Northeastern University
 * Spring 2025 / March, 2025
