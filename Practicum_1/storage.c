@@ -15,15 +15,16 @@
 */
 
 // Stores a message in a file
-void store_msg(Message* msg) {
+int store_msg(Message* msg) {
     FILE* file = fopen(MSG_FILE, "ab");
     if (!file) {
         printf("Error opening file for writing\n");
         // Error during file write
         return -1;
     }
-    fwrite(msg, sizeof(Message), 1, file);
+    size_t written = fwrite(msg, sizeof(Message), 1, file);
     fclose(file);
+    
     
     if (written != 1) {
         printf("Error: Failed to write message to file.\n");
