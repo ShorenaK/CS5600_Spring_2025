@@ -13,7 +13,7 @@
 /* 
 * The function in this file simulates secondary storage(disk)operation.
 */
-
+// Part 2  ---> Caching
 // Stores a message in a file
 int store_msg(Message* msg) {
     FILE* file = fopen(MSG_FILE, "ab");
@@ -33,6 +33,8 @@ int store_msg(Message* msg) {
     // Success
     return 0; 
 }
+// Part 2 --->  Caching
+
 
 // Retrieves a message by ID from the file
 Message* retrieve_msg(int id) {
