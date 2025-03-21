@@ -31,6 +31,10 @@ Message* create_msg(int id, const char* sender, const char* receiver, const char
     msg->delivered = delivered;
     return msg;
 }
+// Part 2 ---> Caching
+
+
+
 
 // Prints a message
 void print_msg(Message* msg) {
