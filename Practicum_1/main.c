@@ -14,8 +14,13 @@
 // This file tests the entire system.
 
 int main() {
+    // Initialize cache
+    init_cache();
+
     // Create a new message
     Message* msg1 = create_msg(1, "Shorena", "Mike", "Good morning, Mike!", 0);
+     Message* msg2 = create_msg(2, "Cheng", "Nino", "Hello, Nino!", 0);
+
     if (msg1 == NULL) {
         printf("Error: Failed to create message.\n");
         return -1;
