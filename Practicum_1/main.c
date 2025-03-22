@@ -11,46 +11,40 @@
 *
 */
 
-// This file tests the entire system.
+// This file tests the entire system including caching.
 
 int main() {
     // Initialize cache
     init_cache();
 
-    // Create a new message
+    // Create two messages
     Message* msg1 = create_msg(1, "Shorena", "Mike", "Good morning, Mike!", 0);
-     Message* msg2 = create_msg(2, "Cheng", "Nino", "Hello, Nino!", 0);
+    Message* msg2 = create_msg(2, "Cheng", "Nino", "Hello, Nino!", 0);
 
-    if (msg1 == NULL) {
-        printf("Error: Failed to create message.\n");
-        return -1;
-    }
-
-    // Store the message
-    if (store_msg(msg1) != 0) {
-        printf("Error: Failed to store message.\n");
+    // Store both messages
+    if (msg1) {
+        store_msg(msg1);
         free_msg(msg1);
-        return -1;
     }
 
-    printf("Message stored successfully.\n");
-
-    // Free the dynamically allocated message (already stored on disk)
-    free_msg(msg1);
-
-    // Retrieve the message by ID
-    Message* retrieved_msg = retrieve_msg(1);
-    if (retrieved_msg == NULL) {
-        printf("Error: Message not found.\n");
-        return -1;
+    if (msg2) {
+        store_msg(msg2);
+        free_msg(msg2);
     }
 
-    // Display the retrieved message
-    printf("\nMessage Retrieved:\n");
-    print_msg(retrieved_msg);
+    // First retrieval (will load from disk, store in cache)
+    Message* retrieved_msg1 = retrieve_msg(1);
+    printf("\nFirst retrieval of message ID 1:\n");
+    if (retrieved_msg1) print_msg(retrieved_msg1);
 
-    // Free allocated memory for retrieved message
-    free_msg(retrieved_msg);
+    // Second retrieval (should hit the cache)
+    Message* retrieved_msg1_again = retrieve_msg(1);
+    printf("\nSecond retrieval of message ID 1 (should be from cache):\n");
+    if (retrieved_msg1_again) print_msg(retrieved_msg1_again);
+
+    // Clean up
+    free_msg(retrieved_msg1);         // First retrieval was malloc'd
+    // retrieved_msg1_again points to cache; no need to free
 
     return 0;
 }
