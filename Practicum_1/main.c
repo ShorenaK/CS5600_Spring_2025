@@ -35,16 +35,14 @@ int main() {
     // First retrieval (will load from disk, store in cache)
     Message* retrieved_msg1 = retrieve_msg(1);
     printf("\nFirst retrieval of message ID 1:\n");
-    if (retrieved_msg1) print_msg(retrieved_msg1);
+    if (retrieved_msg1) 
+        print_msg(retrieved_msg1);
 
     // Second retrieval (should hit the cache)
     Message* retrieved_msg1_again = retrieve_msg(1);
     printf("\nSecond retrieval of message ID 1 (should be from cache):\n");
-    if (retrieved_msg1_again) print_msg(retrieved_msg1_again);
-
-    // Clean up
-    free_msg(retrieved_msg1);         // First retrieval was malloc'd
-    // retrieved_msg1_again points to cache; no need to free
+    if (retrieved_msg1_again) 
+        print_msg(retrieved_msg1_again);
 
     return 0;
 }
