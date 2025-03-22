@@ -15,13 +15,19 @@
 * The function in this file simulates secondary storage(disk)operation.
 */
 
-// Cache structure (array-based)
-Message cache[CACHE_SIZE];  // Fixed-size array for caching messages
-int cache_count = 0;        // Number of messages in the cache
+// Cache structure (array-based), fixed size array for caching messages and quintity of the mesages in cache
+Message cache[CACHE_SIZE];  
+int cache_count = 0; 
+// Default to LRU
+CacheReplacementPolicy cache_replacement_policy = LRU_REPLACEMENT;
+
 
 // Initialize cache (clear all entries)
 void init_cache() {
-    cache_count = 0;  // Reset cache
+    // cache reset
+    cache_count = 0;  
+    // Initialize random seed for random replacement
+    srand(time(NULL));
 }
 
 // Search for a message in the cache
@@ -37,10 +43,11 @@ Message* cache_lookup(int id) {
             return &cache[0];
         }
     }
-    return NULL;  // Message not found in cache
+    // message not found in cache
+    return NULL;  
 }
 
-// Insert a message into the cache
+// Insert a message into the cache with different replacement strategies
 void cache_insert(Message* msg) {
     if (cache_count < CACHE_SIZE) {
         // Insert at the front
@@ -50,11 +57,17 @@ void cache_insert(Message* msg) {
         cache[0] = *msg;
         cache_count++;
     } else {
+	if (cache_replacement_policy == LRU_REPLACEMENT) {
         // Cache is full, remove the least recently used (LRU) entry
         for (int i = CACHE_SIZE - 1; i > 0; i--) {
             cache[i] = cache[i - 1];
         }
         cache[0] = *msg;
+    }else if (cache_replacement_policy == RANDOM_REPLACEMENT) {
+            // Random Replacement: Replace a random index
+            int random_index = rand() % CACHE_SIZE;
+            cache[random_index] = *msg;
+        }
     }
 }
 
