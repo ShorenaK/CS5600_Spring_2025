@@ -44,8 +44,8 @@ int main() {
         print_msg(retrieved1);
 
         // This one came from disk only free if the message is not from the cache
-	if(retrieved1 < cach || retrieved1 >= cache + CACHE_SIZE)
-        free_msg(retrieved1);  
+    if (retrieved1 < cache || retrieved1 >= cache + CACHE_SIZE) {
+        free_msg(retrieved1);
       }
     }
     Message* retrieved1_again = retrieve_msg(1);
