@@ -129,5 +129,6 @@ Message* retrieve_msg(int id) {
 
     fclose(file);
     free(msg);
-    return NULL;  // Message not found
+    // Message not found
+    return NULL;  
 }
