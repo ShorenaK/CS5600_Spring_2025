@@ -30,8 +30,9 @@ After compiling, run the executable:
 ## Included Files
 - `main.c`, `message.c`, `message.h`, `storage.c`, `storage.h` – source code
 - `Makefile` – build script
-- `report.pdf` – full project report
+- `Report_Shorena Anzhilov_Practicum_CS5600.pdf` – full project report
 - `metrics.xlsx` – Excel file with hit/miss results
+- `Shorena_Anzhilov_CS5600_Practicum1_Grading_Rubric` - Grading Rubric
 - `README.txt` – this file
 
 ##  Notes
