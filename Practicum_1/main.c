@@ -24,8 +24,8 @@ int main() {
     cache_replacement_policy = LRU_REPLACEMENT;  
 
     // Create and store two manual test messages
-    Message* msg1 = create_msg(1, "Shorena", "Mike", "Good morning, Mike!", 0);
-    Message* msg2 = create_msg(2, "Cheng", "Nino", "Hello, Nino!", 0);
+    Message* msg1 = create_msg(1, "Shorena", "Mike", "Nice to meet you, Mike!", 0);
+    Message* msg2 = create_msg(2, "Cheng", "Nino", "Are you a student at North Eastern University Nino?", 0);
 
     if (msg1) {
         store_msg(msg1);
