@@ -14,12 +14,12 @@
 
 #define NUM_MESSAGES 20
 #define NUM_ACCESSES 1000
-
+// This file tests the entire system including caching.
 int main() {
     // === Manual testing (Part 2) ===
     printf("=== Manual Test ===\n");
-
-    init_cache();  // Reset cache
+    // Reset cache
+    init_cache();  
     cache_replacement_policy = LRU_REPLACEMENT;  // Start with LRU
 
     // Create and store two manual test messages
@@ -50,7 +50,7 @@ int main() {
         print_msg(retrieved1_again);  // DO NOT free (from cache)
     }
 
-    // === Evaluation Test (Part 3 + 4) ===
+    // === Evaluation Test (Part 3 and 4) ===
     printf("\n=== Evaluation Test ===\n");
 
     // Run both replacement strategies
