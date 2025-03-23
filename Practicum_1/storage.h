@@ -21,7 +21,10 @@ typedef enum {
     LRU_REPLACEMENT
 } CacheReplacementPolicy;
 
-extern CacheReplacementPolicy cache_replacement_policy;  // Global variable for policy
+// Check if a pointer is from cache
+extern Message cache[CACHE_SIZE];  
+// Global variable for policy
+extern CacheReplacementPolicy cache_replacement_policy;  
 
 // Function declarations for storeing and retrieving messages.
 int store_msg(Message* msg);
