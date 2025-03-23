@@ -20,7 +20,8 @@ int main() {
     printf("=== Manual Test ===\n");
     // Reset cache
     init_cache();  
-    cache_replacement_policy = LRU_REPLACEMENT;  // Start with LRU
+    // Start with LRU
+    cache_replacement_policy = LRU_REPLACEMENT;  
 
     // Create and store two manual test messages
     Message* msg1 = create_msg(1, "Shorena", "Mike", "Good morning, Mike!", 0);
@@ -41,13 +42,15 @@ int main() {
     printf("\nFirst retrieval of message ID 1:\n");
     if (retrieved1) {
         print_msg(retrieved1);
-        free_msg(retrieved1);  // This one came from disk
+        // This one came from disk
+        free_msg(retrieved1);  
     }
 
     Message* retrieved1_again = retrieve_msg(1);
     printf("\nSecond retrieval of message ID 1 (should be from cache):\n");
     if (retrieved1_again) {
-        print_msg(retrieved1_again);  // DO NOT free (from cache)
+        // DO NOT free (from cache)
+        print_msg(retrieved1_again);  
     }
 
     // === Evaluation Test (Part 3 and 4) ===
@@ -55,7 +58,8 @@ int main() {
 
     // Run both replacement strategies
     for (int policy = 0; policy < 2; policy++) {
-        init_cache();  // Reset cache again
+        // Reset cache again
+        init_cache();  
 
         if (policy == 0) {
             cache_replacement_policy = LRU_REPLACEMENT;
