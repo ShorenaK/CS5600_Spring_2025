@@ -47,7 +47,7 @@ int main(void)
   
   // Get input from the user:
   printf("Enter message: ");
-  gets(client_message);
+  fgets(client_message);
   
   // Send the message to server:
   if(send(socket_desc, client_message, strlen(client_message), 0) < 0){
