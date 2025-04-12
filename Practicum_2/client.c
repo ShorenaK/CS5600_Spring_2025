@@ -39,50 +39,63 @@ int main(int argc, char *argv[]) {
         close(sock);
         return 1;
     }
+        // ====== PART 1: WRITE ======
+if (strcmp(argv[1], "WRITE") == 0 && argc == 4) {
+    char *local_path = argv[2];
+    char *remote_path = argv[3];
 
-    // ====== PART 1: WRITE ======
-    if (strcmp(argv[1], "WRITE") == 0 && argc == 4) {
-        char *local_path = argv[2];
-        char *remote_path = argv[3];
-
-        FILE *fp = fopen(local_path, "rb");
-        if (!fp) {
-            perror("Failed to open local file");
-            close(sock);
-            return 1;
-        }
-
-        fseek(fp, 0, SEEK_END);
-        long filesize = ftell(fp);
-        fseek(fp, 0, SEEK_SET);
-
-        if (filesize <= 0) {
-            printf("Empty or invalid file.\n");
-            fclose(fp);
-            close(sock);
-            return 1;
-        }
-
-        char *filedata = malloc(filesize);
-        if (!filedata) {
-            perror("Memory allocation failed");
-            fclose(fp);
-            close(sock);
-            return 1;
-        }
-
-        fread(filedata, 1, filesize, fp);
-        fclose(fp);
-
-        char header[1024];
-        snprintf(header, sizeof(header), "WRITE %s %ld\n", remote_path, filesize);
-        send(sock, header, strlen(header), 0);
-        send(sock, filedata, filesize, 0);
-
-        printf("File '%s' sent to server as '%s'\n", local_path, remote_path);
-        free(filedata);
+    FILE *fp = fopen(local_path, "rb");
+    if (!fp) {
+        perror("Failed to open local file");
+        close(sock);
+        return 1;
     }
 
+    fseek(fp, 0, SEEK_END);
+    long filesize = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+
+    if (filesize <= 0) {
+        printf("Empty or invalid file.\n");
+        fclose(fp);
+        close(sock);
+        return 1;
+    }
+
+    // Allocate memory for file content
+    char *filedata = malloc(filesize);
+    if (!filedata) {
+        perror("Memory allocation failed");
+        fclose(fp);
+        close(sock);
+        return 1;
+    }
+
+    // Read file into memory
+    size_t bytes_read = fread(filedata, 1, filesize, fp);
+    fclose(fp);
+
+    if (bytes_read != filesize) {
+        printf("Client: fread only read %zu of %ld bytes\n", bytes_read, filesize);
+        free(filedata);
+        close(sock);
+        return 1;
+    }
+
+    printf("Client: read %zu bytes from file\n", bytes_read);
+
+    // Send command header
+    char header[1024];
+    snprintf(header, sizeof(header), "WRITE %s %ld\n", remote_path, filesize);
+    send(sock, header, strlen(header), 0);
+
+    // Send actual file content
+    ssize_t sent = send(sock, filedata, filesize, 0);
+    printf("Client: sent %zd bytes to server\n", sent);
+
+    printf("File '%s' sent to server as '%s'\n", local_path, remote_path);
+    free(filedata);
+  }
     // ====== PART 2: GET ======
     else if (strcmp(argv[1], "GET") == 0 && argc == 4) {
         char *remote_path = argv[2];
