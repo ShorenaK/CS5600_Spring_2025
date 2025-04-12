@@ -1,10 +1,3 @@
-/*
- * client.c -- TCP Socket Client
- * 
- * adapted from: 
- *   https://www.educative.io/answers/how-to-implement-tcp-sockets-in-c
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,52 +10,25 @@
 #define BUFFER_SIZE 4096
 
 int main(int argc, char *argv[]) {
-    if (argc != 4 || strcmp(argv[1], "WRITE") != 0) {
-        printf("Usage: %s WRITE local_file_path remote_file_path\n", argv[0]);
+    if (argc < 2) {
+        printf("Usage:\n");
+        printf("  %s WRITE local_file_path remote_file_path\n", argv[0]);
+        printf("  %s GET remote_file_path local_file_path\n", argv[0]);
+        printf("  %s RM remote_file_path\n", argv[0]);
         return 1;
     }
 
-    char *local_path = argv[2];
-    char *remote_path = argv[3];
-
-    // Open local file
-    FILE *fp = fopen(local_path, "rb");
-    if (fp == NULL) {
-        perror("Failed to open local file");
-        return 1;
-    }
-
-    // Read file size
-    fseek(fp, 0, SEEK_END);
-    long filesize = ftell(fp);
-    fseek(fp, 0, SEEK_SET);
-
-    if (filesize <= 0) {
-        printf("Empty or invalid file.\n");
-        fclose(fp);
-        return 1;
-    }
-
-    // Read file content
-    char *filedata = malloc(filesize);
-    if (!filedata) {
-        perror("Memory allocation failed");
-        fclose(fp);
-        return 1;
-    }
-
-    fread(filedata, 1, filesize, fp);
-    fclose(fp);
+    int sock;
+    struct sockaddr_in server_addr;
+    char buffer[BUFFER_SIZE];
 
     // Create socket
-    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
         perror("Socket creation failed");
-        free(filedata);
         return 1;
     }
 
-    struct sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(2024);
     server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
@@ -71,20 +37,116 @@ int main(int argc, char *argv[]) {
     if (connect(sock, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
         perror("Connection failed");
         close(sock);
-        free(filedata);
         return 1;
     }
 
-    // Send command header
-    char header[1024];
-    snprintf(header, sizeof(header), "WRITE %s %ld\n", remote_path, filesize);
-    send(sock, header, strlen(header), 0);
+    // ====== PART 1: WRITE ======
+    if (strcmp(argv[1], "WRITE") == 0 && argc == 4) {
+        char *local_path = argv[2];
+        char *remote_path = argv[3];
 
-    // Send file content
-    send(sock, filedata, filesize, 0);
-    printf("File '%s' sent to server as '%s'\n", local_path, remote_path);
+        FILE *fp = fopen(local_path, "rb");
+        if (!fp) {
+            perror("Failed to open local file");
+            close(sock);
+            return 1;
+        }
 
-    free(filedata);
+        fseek(fp, 0, SEEK_END);
+        long filesize = ftell(fp);
+        fseek(fp, 0, SEEK_SET);
+
+        if (filesize <= 0) {
+            printf("Empty or invalid file.\n");
+            fclose(fp);
+            close(sock);
+            return 1;
+        }
+
+        char *filedata = malloc(filesize);
+        if (!filedata) {
+            perror("Memory allocation failed");
+            fclose(fp);
+            close(sock);
+            return 1;
+        }
+
+        fread(filedata, 1, filesize, fp);
+        fclose(fp);
+
+        char header[1024];
+        snprintf(header, sizeof(header), "WRITE %s %ld\n", remote_path, filesize);
+        send(sock, header, strlen(header), 0);
+        send(sock, filedata, filesize, 0);
+
+        printf("File '%s' sent to server as '%s'\n", local_path, remote_path);
+        free(filedata);
+    }
+
+    // ====== PART 2: GET ======
+    else if (strcmp(argv[1], "GET") == 0 && argc == 4) {
+        char *remote_path = argv[2];
+        char *local_path = argv[3];
+
+        char header[1024];
+        snprintf(header, sizeof(header), "GET %s\n", remote_path);
+        send(sock, header, strlen(header), 0);
+
+        long filesize;
+        memset(buffer, 0, sizeof(buffer));
+        recv(sock, buffer, sizeof(buffer), 0);
+
+        if (sscanf(buffer, "SIZE %ld", &filesize) != 1 || filesize <= 0) {
+            printf("Invalid file or file not found on server.\n");
+            close(sock);
+            return 1;
+        }
+
+        send(sock, "READY\n", 6, 0);
+
+        FILE *fp = fopen(local_path, "wb");
+        if (!fp) {
+            perror("Failed to create local file");
+            close(sock);
+            return 1;
+        }
+
+        long bytes_received = 0;
+        while (bytes_received < filesize) {
+            ssize_t chunk = recv(sock, buffer, sizeof(buffer), 0);
+            if (chunk <= 0) break;
+            fwrite(buffer, 1, chunk, fp);
+            bytes_received += chunk;
+        }
+
+        fclose(fp);
+        printf("File '%s' received from server as '%s' (%ld bytes)\n", remote_path, local_path, bytes_received);
+    }
+
+    // ====== PART 3: RM (Delete) ======
+    else if (strcmp(argv[1], "RM") == 0 && argc == 3) {
+        char *remote_path = argv[2];
+
+        char header[1024];
+        snprintf(header, sizeof(header), "RM %s\n", remote_path);
+        send(sock, header, strlen(header), 0);
+
+        memset(buffer, 0, sizeof(buffer));
+        recv(sock, buffer, sizeof(buffer), 0);
+        printf("Server response: %s\n", buffer);
+    }
+
+    // ====== PART 4A: Multi-client (placeholder) ======
+    /*
+   
+    */
+
+    // ====== Invalid command ======
+    else {
+        printf("Invalid command or argument count.\n");
+    }
+
     close(sock);
     return 0;
 }
+
