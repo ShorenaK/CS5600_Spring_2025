@@ -1,4 +1,4 @@
-#include <stdio.h>
+er#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
@@ -11,6 +11,9 @@
 #define BUFFER_SIZE 4096
 
 int main(int argc, char *argv[]) {
+// It checks if the user gave enough command-line arguments. If not, it shows the correct way to run the program, so users aren’t confused.
+// It prevents the program from continuing with missing inputs, which could cause errors.
+
     if (argc < 2) {
         printf("Usage:\n");
         printf("  %s WRITE local_file_path remote_file_path\n", argv[0]);
@@ -26,7 +29,7 @@ int main(int argc, char *argv[]) {
     // temporary storage for messages — a string or binary data holder.
     char buffer[BUFFER_SIZE];
 
-    // Create socket, AF_INET -- IPv4 address family , SOCK_STREAM -- telling the system to use TCP
+    // Create socket, server address setup AF_INET -- IPv4 address family , SOCK_STREAM -- telling the system to use TCP
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
         perror("Socket creation failed");
