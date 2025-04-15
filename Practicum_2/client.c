@@ -129,43 +129,57 @@ if (strcmp(argv[1], "WRITE") == 0 && argc == 4) {
   }
 
     
-    // ====== PART 2: GET ======
+// ==== PART 2: GET elsse if check command 	Make sure it's "GET" with 2 file paths,then Build and send GET request	"GET remote_path\n"
+//=== Receive file size from server	e.g., "SIZE 2048\n", Confirm READY to receive	Send "READY\n", Create local file	Open for writing
+// == Receive file chunks	Using recv() and fwrite(), Close and confirm	Close file, print success message
+
+    //Check if the user typed "GET" and passed the correct number of arguments
+    // (./client GET remote_path local_path) strcmp() --> string compare
+
     else if (strcmp(argv[1], "GET") == 0 && argc == 4) {
+        // Store the remote file path (on the server) and the local file path (where to save the file)
         char *remote_path = argv[2];
         char *local_path = argv[3];
 
         char header[1024];
+        // Format a command message like "GET folder/file.txt\n"
         snprintf(header, sizeof(header), "GET %s\n", remote_path);
-        send(sock, header, strlen(header), 0);
+        send(sock, header, strlen(header), 0); // Send the GET command to the server to request the file
 
-        long filesize;
-        memset(buffer, 0, sizeof(buffer));
-        recv(sock, buffer, sizeof(buffer), 0);
+        long filesize; //Declare a variable to hold the incoming file size
+        memset(buffer, 0, sizeof(buffer)); // Clear the buffer before receiving data
+        recv(sock, buffer, sizeof(buffer), 0); // Receive the server’s response, which should be something like: "SIZE 1024\n"
 
+         //Parse the filesize from the message
         if (sscanf(buffer, "SIZE %ld", &filesize) != 1 || filesize <= 0) {
             printf("Invalid file or file not found on server.\n");
             close(sock);
             return 1;
         }
 
+        // Tell the server you're ready to receive the file
         send(sock, "READY\n", 6, 0);
 
+         // Open the local file for writing in binary mode
         FILE *fp = fopen(local_path, "wb");
         if (!fp) {
+           //  If local file can’t be created → print error, clean up, and exit
             perror("Failed to create local file");
             close(sock);
             return 1;
         }
 
-        long bytes_received = 0;
+        long bytes_received = 0; // Track how many bytes we’ve received so far
+        // Receive the file in chunks . Write each chunk into the local file . Stop when we’ve received the full file
         while (bytes_received < filesize) {
             ssize_t chunk = recv(sock, buffer, sizeof(buffer), 0);
             if (chunk <= 0) break;
             fwrite(buffer, 1, chunk, fp);
             bytes_received += chunk;
         }
-
+       // Done writing → close the local file
         fclose(fp);
+        // Print a success message showing where the file came from and where it was saved
         printf("File '%s' received from server as '%s' (%ld bytes)\n", remote_path, local_path, bytes_received);
     }
 
