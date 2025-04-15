@@ -219,40 +219,48 @@ void handle_client(int client_sock) {
     close(client_sock); //Close the socket connection with the client once you're done processing the command
 }
 
+// server entry point Create socket using socket() , Set address IP + port info Bind to port using bind(), Listen for clients using listen(), 
+// Accept client connections in an infinite loop  one by one, Call handle_client(client_sock) for each connection
+// Close socket	Cleanup (not used here due to infinite loop)
 int main() {
-    int server_sock, client_sock;
-    struct sockaddr_in server_addr, client_addr;
-    socklen_t client_size = sizeof(client_addr);
+    int server_sock, client_sock; // socket used to listen for new connections, socket used to communicate with a specific client
+    struct sockaddr_in server_addr, client_addr; //store IP and port info 
+    socklen_t client_size = sizeof(client_addr); // this is used used by accept() to know the size of the client address structure
 
     // Create server socket
-    server_sock = socket(AF_INET, SOCK_STREAM, 0);
-    if (server_sock < 0) {
+    server_sock = socket(AF_INET, SOCK_STREAM, 0); // AF_INET → IPv4
+    if (server_sock < 0) { // SOCK_STREAM → TCP protocol ❌ If socket creation fails, print error and exit
         perror("Socket creation failed");
         return 1;
     }
 
     // Set server address
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(PORT);
-    server_addr.sin_addr.s_addr = INADDR_ANY;
+    server_addr.sin_family = AF_INET; // IPv4
+    server_addr.sin_port = htons(PORT); //convert port to network byte order  
+    server_addr.sin_addr.s_addr = INADDR_ANY;  // accept connections on any network interface (localhost, LAN, etc.)
 
     // Bind socket to address
     if (bind(server_sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
-        perror("Bind failed");
-        close(server_sock);
+        perror("Bind failed"); // Link the socket to the IP + port
+        close(server_sock); //If another process is already using the port, bind will fail 
         return 1;
     }
 
-    // Listen for incoming connections
+    // Listen for incoming connections Now the socket is in passive mode, waiting for clients
     if (listen(server_sock, 5) < 0) {
         perror("Listen failed");
         close(server_sock);
         return 1;
     }
 
-    printf("Server listening on port %d...\n", PORT);
+    printf("Server listening on port %d...\n", PORT); // print a message to show the server is running
 
-    // Main server loop to accept and handle clients
+// Main server loop to accept and handle clients
+// Wait for a client to connect: accept() blocks until a new client arrives
+// When a client connects, it returns a new client_sock to talk to that specific client
+// If accept() fails, print error and continue waiting
+
+
     while (1) {
         client_sock = accept(server_sock, (struct sockaddr*)&client_addr, &client_size);
         if (client_sock < 0) {
@@ -260,10 +268,10 @@ int main() {
             continue;
         }
 
-        printf("Client connected: %s\n", inet_ntoa(client_addr.sin_addr));
-        handle_client(client_sock);
-    }
+        printf("Client connected: %s\n", inet_ntoa(client_addr.sin_addr)); // Print client’s IP
+        handle_client(client_sock); // Call your custom function handle_client(client_sock) to process their request (WRITE, GET, RM)
+    } // Repeat the whole loop forever — server always waits for the next client
 
-    close(server_sock);
+    close(server_sock); // Closes the listening socket if server ever exits (good practice)
     return 0;
-}
+} 
