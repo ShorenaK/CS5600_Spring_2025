@@ -184,36 +184,39 @@ void handle_client(int client_sock) {
         printf("File sent: %s (%ld bytes)\n", fullpath, filesize); //Print a confirmation that the file was successfully sent
     }
 
-
-        
     // ====== Handle RM (Delete) command ======
+     // Check for "RM" command	Detect delete request, Extract file path Use sscanf() to read filename, Build full path	Prefix with ROOT_DIR, 
+    // Try to delete file	Use remove(), Send result back to client Success or failure message, Close socket End client session cleanly
+
+    // Check if the command starts with "RM" — used to signal a request to delete a file 
     else if (strncmp(buffer, "RM", 2) == 0) {
         char filepath[1024];
-        if (sscanf(buffer, "RM %1023s", filepath) != 1) {
-            printf("Invalid RM command.\n");
+        if (sscanf(buffer, "RM %1023s", filepath) != 1) { //Extract the file path from the command using sscanf()
+            printf("Invalid RM command.\n"); // If format is wrong (e.g. no file path), print an error and exit 
             close(client_sock);
             return;
         }
 
+        // Build the full path to the file within the server’s storage directory
         char fullpath[2048];
         snprintf(fullpath, sizeof(fullpath), "%s/%s", ROOT_DIR, filepath);
 
         // Attempt to delete the file
         if (remove(fullpath) == 0) {
-            send(client_sock, "File deleted successfully.\n", 28, 0);
-            printf("Deleted: %s\n", fullpath);
+            send(client_sock, "File deleted successfully.\n", 28, 0);  //If successful: Send a confirmation message back to the client
+            printf("Deleted: %s\n", fullpath); // Print a log message on the server
         } else {
-            send(client_sock, "Failed to delete file.\n", 24, 0);
-            perror("Delete failed");
+            send(client_sock, "Failed to delete file.\n", 24, 0); // if deletaion fails we use perror() to print out the system error message .
+            perror("Delete failed"); 
         }
     }
 
-    // ====== Unknown command ======
+    // ====== Unknown command ====== here we catche anything that isn’t WRITE, GET, or RM, goiod for debugging 
     else {
         printf("Unknown command: %s\n", buffer);
     }
 
-    close(client_sock);
+    close(client_sock); //Close the socket connection with the client once you're done processing the command
 }
 
 int main() {
