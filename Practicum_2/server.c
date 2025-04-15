@@ -52,33 +52,42 @@ void handle_client(int client_sock) {
         return;
     }
 
-    
     // ====== Handle WRITE command ======
+    // Confirm the command is WRITE strncmp(), Extract file path and size sscanf(), 
+    // Create necessary folders make_parent_dirs(), Open destination file fopen(), Find start of file data in the buffer strchr(), 
+    // Save file content fwrite(), and lastly we ahve a loop Receive all file chunks from the client, and Finish writing and close file fclose(), 
+
+    
+    // Check if the message starts with "WRITE" (first 5 characters)
     if (strncmp(buffer, "WRITE", 5) == 0) {
-        char filepath[1024];
-        long filesize;
+        char filepath[1024];  // The file path the client wants to write to
+        long filesize; // The size of the file (in bytes)
 
         // Parse command: "WRITE path size"
+       // we are using sscanf() to Extract file path and size using 
         if (sscanf(buffer, "WRITE %1023s %ld", filepath, &filesize) != 2 || filesize <= 0) {
-            printf("Invalid WRITE command.\n");
+            printf("Invalid WRITE command.\n"); //If the format is wrong or size is invalid → show error and stop
             close(client_sock);
             return;
         }
 
         // Build the full file path
         char fullpath[2048];
+        // Combine root directory + user’s requested path (e.g., "server_storage/folder/file.txt")
         snprintf(fullpath, sizeof(fullpath), "%s/%s", ROOT_DIR, filepath);
+       // Create any needed directories using make_parent_dirs()
         make_parent_dirs(fullpath);
 
         // Open file for writing
-        FILE *fp = fopen(fullpath, "wb");
+        FILE *fp = fopen(fullpath, "wb"); // Try to create or open the destination file in binary write mode
         if (!fp) {
-            perror("Failed to open file for writing");
+            perror("Failed to open file for writing"); // If it fails, print error and stop
             close(client_sock);
             return;
         }
 
         // Find where file data starts in the buffer
+//Find the newline character that separates the command from the actual file content
         char *file_start = strchr(buffer, '\n');
         if (!file_start) {
             printf("Malformed WRITE command, no newline.\n");
@@ -87,28 +96,35 @@ void handle_client(int client_sock) {
             return;
         }
 
-        file_start++; // Skip the newline
+// Calculate how much of the received data is actual file content (after the header)
+// This is  Useful if some file data already came in the first recv() call
+
+        file_start++; // Skip the newline. Move past the newline
         ssize_t header_len = file_start - buffer;
         ssize_t initial_data_len = received - header_len;
 
+// Tracking  If the first recv() already includes some file content, write it to the file and track how many bytes were written
         long bytes_received = 0;
         if (initial_data_len > 0) {
             fwrite(file_start, 1, initial_data_len, fp);
             bytes_received += initial_data_len;
         }
 
+//Keep reading from the socket until the full file is received
         // Read the remaining bytes of the file
         while (bytes_received < filesize) {
             ssize_t chunk = recv(client_sock, buffer, sizeof(buffer), 0);
             if (chunk <= 0) break;
             fwrite(buffer, 1, chunk, fp);
-            bytes_received += chunk;
+            bytes_received += chunk; // Write each chunk to the file using fwrite()
         }
-
+//Close the file after writing and print confirmtaion 
         fclose(fp);
         printf("File saved: %s (%ld bytes)\n", fullpath, bytes_received);
     }
 
+
+        
         
     // ====== Handle GET command ======
     else if (strncmp(buffer, "GET", 3) == 0) {
@@ -165,6 +181,8 @@ void handle_client(int client_sock) {
         printf("File sent: %s (%ld bytes)\n", fullpath, filesize);
     }
 
+
+        
     // ====== Handle RM (Delete) command ======
     else if (strncmp(buffer, "RM", 2) == 0) {
         char filepath[1024];
