@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
+// To limit how much data we send or receive at once.
 #define BUFFER_SIZE 4096
 
 int main(int argc, char *argv[]) {
@@ -18,43 +19,63 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    // connection handle    
     int sock;
+    // structure that will store the server’s address info like IP address and port.
     struct sockaddr_in server_addr;
+    // temporary storage for messages — a string or binary data holder.
     char buffer[BUFFER_SIZE];
 
-    // Create socket
+    // Create socket, AF_INET -- IPv4 address family , SOCK_STREAM -- telling the system to use TCP
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
         perror("Socket creation failed");
         return 1;
     }
 
+     // Set server address
     server_addr.sin_family = AF_INET;
+    // sets the port number (2024) but in network byte order 
     server_addr.sin_port = htons(2024);
+    // IP address, converting "127.0.0.1" string to the binary form.
     server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
-    // Connect to server
+    // Try to Connect to server
     if (connect(sock, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
         perror("Connection failed");
         close(sock);
         return 1;
     }
-        // ====== PART 1: WRITE ======
+// === In PART 1: we made Socket connection to server connect(), File opened (client-side) fopen(), we calculate File size fseek() + ftell(), 
+//=== we allocated memory wiht malloc(filesize), File read into memory with fread(), 
+// ==  File closed	fclose(fp) after reading, Header prepared snprintf() → command line: "WRITE path size"
+    
+// Check if the first argument is "WRITE" and that exactly 4 arguments were passed
 if (strcmp(argv[1], "WRITE") == 0 && argc == 4) {
+    // argv[2] - path to the local file on the client's machine
     char *local_path = argv[2];
+    // argv[3] -  path to where the file should be saved on the server
     char *remote_path = argv[3];
 
+    // Try to open the local file in binary read mode ("rb")
     FILE *fp = fopen(local_path, "rb");
+    // If file cannot be opened, print error, close socket, and exit
     if (!fp) {
         perror("Failed to open local file");
         close(sock);
         return 1;
     }
-
+    // We need to find out how big the file is (in bytes) so that:
+    // We know how much memory to allocate for it
+    // We can tell the server how many bytes we’re sending
+    // Move file pointer to the end to measure file size
     fseek(fp, 0, SEEK_END);
+    // Get the current position of the file pointer = total file size in bytes
     long filesize = ftell(fp);
+    // Move file pointer back to the beginning so we can read the file later
     fseek(fp, 0, SEEK_SET);
 
+    // If the file is empty or has an invalid size, exit with a message
     if (filesize <= 0) {
         printf("Empty or invalid file.\n");
         fclose(fp);
@@ -62,40 +83,52 @@ if (strcmp(argv[1], "WRITE") == 0 && argc == 4) {
         return 1;
     }
 
-    // Allocate memory for file content
-    char *filedata = malloc(filesize);
-    if (!filedata) {
+    // Allocate memory for file content based on file size we measured earlier
+    char *filedata = malloc(filesize); // requests that many bytes from the heap.
+    if (!filedata) { //filedata is a pointer to the start of the allocated memory.
         perror("Memory allocation failed");
-        fclose(fp);
-        close(sock);
-        return 1;
+        fclose(fp); // Close the file before exiting
+        close(sock); // Close the network connection
+        return 1; // Exit with error
     }
 
-    // Read file into memory
+    // Read the file content into the allocated memory buffer
     size_t bytes_read = fread(filedata, 1, filesize, fp);
-    fclose(fp);
+    fclose(fp); // We're done reading from the file, so close it
 
+    // Confirm that the number of bytes read matches the expected file size
     if (bytes_read != filesize) {
         printf("Client: fread only read %zu of %ld bytes\n", bytes_read, filesize);
-        free(filedata);
-        close(sock);
+        free(filedata); // Free the allocated memory since we're not using it
+        close(sock); // Also close the socket
         return 1;
     }
 
+    // A confirmation message showing how many bytes were successfully read into memory
     printf("Client: read %zu bytes from file\n", bytes_read);
 
-    // Send command header
+//  Prepare the command header  and  Send command header
+// This header tells the server what to do, where to save the file, and how big it is.
+// Format: "WRITE remote_file_path filesize\n"
+// Example: "WRITE folder/file.txt 128\n"
+  
     char header[1024];
     snprintf(header, sizeof(header), "WRITE %s %ld\n", remote_path, filesize);
+    // Sends the header string through the open socket.
+    // The server will parse this header to prepare for the incoming file content.
     send(sock, header, strlen(header), 0);
 
     // Send actual file content
     ssize_t sent = send(sock, filedata, filesize, 0);
+    // Print confirmation of how much was sent
     printf("Client: sent %zd bytes to server\n", sent);
 
+    // Confirm what file was sent and where
     printf("File '%s' sent to server as '%s'\n", local_path, remote_path);
-    free(filedata);
+    free(filedata); // Free the allocated memory now that the file has been sent
   }
+
+    
     // ====== PART 2: GET ======
     else if (strcmp(argv[1], "GET") == 0 && argc == 4) {
         char *remote_path = argv[2];
@@ -136,7 +169,7 @@ if (strcmp(argv[1], "WRITE") == 0 && argc == 4) {
         printf("File '%s' received from server as '%s' (%ld bytes)\n", remote_path, local_path, bytes_received);
     }
 
-    // ====== PART 3: RM (Delete) ======
+    // ====== PART 3: RM Delete ======
     else if (strcmp(argv[1], "RM") == 0 && argc == 3) {
         char *remote_path = argv[2];
 
@@ -149,7 +182,7 @@ if (strcmp(argv[1], "WRITE") == 0 && argc == 4) {
         printf("Server response: %s\n", buffer);
     }
 
-    // ====== PART 4A: Multi-client (placeholder) ======
+    // ====== PART 4A: Multi-client working on it  ======
     /*
    
     */
