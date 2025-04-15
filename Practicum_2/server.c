@@ -53,7 +53,7 @@ void handle_client(int client_sock) {
     }
 
     // ====== Handle WRITE command ======
-    // Confirm the command is WRITE strncmp(), Extract file path and size sscanf(), 
+    // Confirm the command is WRITE using strncmp(), Extract file path and size sscanf(), 
     // Create necessary folders make_parent_dirs(), Open destination file fopen(), Find start of file data in the buffer strchr(), 
     // Save file content fwrite(), and lastly we ahve a loop Receive all file chunks from the client, and Finish writing and close file fclose(), 
 
@@ -122,46 +122,49 @@ void handle_client(int client_sock) {
         fclose(fp);
         printf("File saved: %s (%ld bytes)\n", fullpath, bytes_received);
     }
-
-
-        
-        
+     
     // ====== Handle GET command ======
-    else if (strncmp(buffer, "GET", 3) == 0) {
+    // == Check for "GET" command	Validate input, Extract file path From buffer using sscanf(), Build full server path Add ROOT_DIR prefix,
+    // == Try to open file	Exit if not found, Get file size With fseek() and ftell(), Send "SIZE [number]"	Let client know how many bytes to expect
+    // == Wait for "READY" Client confirms it's ready to receive, Send file content	Chunk by chunk using fread() and send(), Close file	Finish and clean up
+
+        
+    else if (strncmp(buffer, "GET", 3) == 0) {  // Check if the incoming command starts with "GET", Only the first 3 characters
         char filepath[1024];
-        if (sscanf(buffer, "GET %1023s", filepath) != 1) {
+        if (sscanf(buffer, "GET %1023s", filepath) != 1) { // Extract the requested file path from the string (e.g., GET folder/file.txt)
             printf("Invalid GET command.\n");
             close(client_sock);
             return;
         }
 
         // Build full path
-        char fullpath[2048];
-        snprintf(fullpath, sizeof(fullpath), "%s/%s", ROOT_DIR, filepath);
+        char fullpath[2048]; // Construct the absolute path to the file in the server's file system
+        snprintf(fullpath, sizeof(fullpath), "%s/%s", ROOT_DIR, filepath); // Example: server_storage/folder/file.txt
 
-        // Open the file to read
-        FILE *fp = fopen(fullpath, "rb");
+        // Open the file to read, Try to open the file in read-binary mode
+        FILE *fp = fopen(fullpath, "rb"); 
         if (!fp) {
             char *msg = "SIZE 0\n";
-            send(client_sock, msg, strlen(msg), 0);
-            close(client_sock);
+            send(client_sock, msg, strlen(msg), 0); // Send SIZE 0\n to tell client the file is missing
+            close(client_sock); //Then close the connection
             return;
         }
 
-        // Get file size
+        // Get file size Move to end of file to get its size, then return to beginning so we can start reading
         fseek(fp, 0, SEEK_END);
         long filesize = ftell(fp);
         fseek(fp, 0, SEEK_SET);
 
-        // Send file size to client
+        // Send file size to client, SIZE 2048\n
         char header[64];
         snprintf(header, sizeof(header), "SIZE %ld\n", filesize);
         send(client_sock, header, strlen(header), 0);
 
-        // Wait for READY from client
+        // Wait for READY from client  respond with "READY\n" before starting the file transfer
         memset(buffer, 0, sizeof(buffer));
         recv(client_sock, buffer, sizeof(buffer), 0);
 
+        // If the client doesn't say it's ready → cancel the transfer
         if (strncmp(buffer, "READY", 5) != 0) {
             printf("Client did not confirm READY.\n");
             fclose(fp);
@@ -169,7 +172,7 @@ void handle_client(int client_sock) {
             return;
         }
 
-        // Send file contents
+// the process of Sending file contents  Read file data in chunks using fread() and send each chunk over the socket, Loop continues until end of file
         while (!feof(fp)) {
             size_t bytes_read = fread(buffer, 1, sizeof(buffer), fp);
             if (bytes_read > 0) {
@@ -177,8 +180,8 @@ void handle_client(int client_sock) {
             }
         }
 
-        fclose(fp);
-        printf("File sent: %s (%ld bytes)\n", fullpath, filesize);
+        fclose(fp); //Close the file 
+        printf("File sent: %s (%ld bytes)\n", fullpath, filesize); //Print a confirmation that the file was successfully sent
     }
 
 
