@@ -183,17 +183,23 @@ if (strcmp(argv[1], "WRITE") == 0 && argc == 4) {
         printf("File '%s' received from server as '%s' (%ld bytes)\n", remote_path, local_path, bytes_received);
     }
 
-    // ====== PART 3: RM Delete ======
-    else if (strcmp(argv[1], "RM") == 0 && argc == 3) {
-        char *remote_path = argv[2];
+// ==== PART 3: RM Delete Delete commend , Check for "RM" commandto Validates, Format "RM path\n" Build command string
+// Send to server to Ask server to delete the file, Wait for reply from Server responds with success/failure
+// === Print result Show the server's message adn finally Close socket	Clean shutdown
 
+
+    // Check if the user typed "RM" with one path: ./client RM remote_path
+    else if (strcmp(argv[1], "RM") == 0 && argc == 3) {
+        char *remote_path = argv[2];  // Store the remote file path to delete (on the server)
+
+        // Create the command string, like: "RM folder/myfile.txt\n" This tells the server to delete that file
         char header[1024];
         snprintf(header, sizeof(header), "RM %s\n", remote_path);
-        send(sock, header, strlen(header), 0);
+        send(sock, header, strlen(header), 0); // Send the command to the server over the socket
 
-        memset(buffer, 0, sizeof(buffer));
-        recv(sock, buffer, sizeof(buffer), 0);
-        printf("Server response: %s\n", buffer);
+        memset(buffer, 0, sizeof(buffer)); // Clear the buffer before receiving any server response
+        recv(sock, buffer, sizeof(buffer), 0); // Receive the server's response — success or failure message
+        printf("Server response: %s\n", buffer); // Print whatever the server replied (e.g. "File deleted successfully.")
     }
 
     // ====== PART 4A: Multi-client working on it  ======
@@ -201,12 +207,12 @@ if (strcmp(argv[1], "WRITE") == 0 && argc == 4) {
    
     */
 
-    // ====== Invalid command ======
+    // Catch-All for Invalid Commands, If user typed an unknown command or gave the wrong number of arguments, show usage error
     else {
         printf("Invalid command or argument count.\n");
     }
 
-    close(sock);
-    return 0;
+    close(sock); // Close the connection to the server
+    return 0; // End the program successfully
 }
 
