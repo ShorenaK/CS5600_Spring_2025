@@ -8,11 +8,20 @@
 #include <fcntl.h>
 #include <errno.h>
 
+//the TCP port number the server will listen on
 #define PORT 2024
+//: size of the buffer used for receiving data
 #define BUFFER_SIZE 4096
+// the base directory on the server where files are stored
 #define ROOT_DIR "server_storage"
 
+
+// === int this section Creates any missing folders for incoming files with make_parent_dirs(), 
+// ==== Reads the initial command sent by the client handle_client() , Receives the first message from the client recv(), 
+// === Handles bad or dropped connections 
+
 // Helper function to create parent directories for a given path
+//Copies the full file path into a temporary buffer so we can modify it safely. 
 void make_parent_dirs(const char *path) {
     char temp[1024];
     strcpy(temp, path);
@@ -20,25 +29,30 @@ void make_parent_dirs(const char *path) {
     for (char *p = temp + strlen(ROOT_DIR) + 1; *p; p++) {
         if (*p == '/') {
             *p = '\0';
-            mkdir(temp, 0755);
+            mkdir(temp, 0755);  // Create the directory if it doesn't exist
             *p = '/';
         }
     }
 }
 
 // Function to handle a single client request
+// Sets up a buffer to receive data from the client
 void handle_client(int client_sock) {
     char buffer[BUFFER_SIZE];
-    memset(buffer, 0, sizeof(buffer));
+    memset(buffer, 0, sizeof(buffer)); // Clears it using memset to avoid leftover garbage data
 
     // Receive the initial command (e.g., WRITE, GET, RM)
+    // Reads data from the client socket into the buffer
     ssize_t received = recv(client_sock, buffer, sizeof(buffer), 0);
     if (received <= 0) {
+        // The client closed the connection or an error happened
         printf("Failed to receive command.\n");
+        //So the server closes the socket and stops handling this client
         close(client_sock);
         return;
     }
 
+    
     // ====== Handle WRITE command ======
     if (strncmp(buffer, "WRITE", 5) == 0) {
         char filepath[1024];
@@ -95,6 +109,7 @@ void handle_client(int client_sock) {
         printf("File saved: %s (%ld bytes)\n", fullpath, bytes_received);
     }
 
+        
     // ====== Handle GET command ======
     else if (strncmp(buffer, "GET", 3) == 0) {
         char filepath[1024];
