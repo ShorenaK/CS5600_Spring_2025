@@ -16,7 +16,7 @@
 #define ROOT_DIR "server_storage"
 
 
-// === int this section Creates any missing folders for incoming files with make_parent_dirs(), 
+// === here we Create any missing folders for incoming files with make_parent_dirs(), 
 // ==== Reads the initial command sent by the client handle_client() , Receives the first message from the client recv(), 
 // === Handles bad or dropped connections 
 
@@ -52,10 +52,10 @@ void handle_client(int client_sock) {
         return;
     }
 
-    // ====== Handle WRITE command ======
-    // Confirm the command is WRITE using strncmp(), Extract file path and size sscanf(), 
-    // Create necessary folders make_parent_dirs(), Open destination file fopen(), Find start of file data in the buffer strchr(), 
-    // Save file content fwrite(), and lastly we ahve a loop Receive all file chunks from the client, and Finish writing and close file fclose(), 
+    // ====== Handle WRITE from the clinet but would be recoved from the server end  ======
+    // Confirm the command is WRITE using strncmp(), and then Extract file path and size with sscanf(), 
+    // Create necessary folders make_parent_dirs(), Open destination file fopen(), Find start of file data in the buffer with strchr(), 
+    // Save file content with fwrite(), and lastly we haveve a loop Receive all file chunks from the client, and Finish writing and close file fclose(), 
 
     
     // Check if the message starts with "WRITE" (first 5 characters)
@@ -86,7 +86,7 @@ void handle_client(int client_sock) {
             return;
         }
 
-        // Find where file data starts in the buffer
+    // Find where file data starts in the buffer
 //Find the newline character that separates the command from the actual file content
         char *file_start = strchr(buffer, '\n');
         if (!file_start) {
@@ -97,7 +97,7 @@ void handle_client(int client_sock) {
         }
 
 // Calculate how much of the received data is actual file content (after the header)
-// This is  Useful if some file data already came in the first recv() call
+// This is  Useful if some file data already came in the first with recv() call
 
         file_start++; // Skip the newline. Move past the newline
         ssize_t header_len = file_start - buffer;
@@ -123,12 +123,11 @@ void handle_client(int client_sock) {
         printf("File saved: %s (%ld bytes)\n", fullpath, bytes_received);
     }
      
-    // ====== Handle GET command ======
+    // ====== Handle GET cleint get the file from server and copyes it locally command ======
     // == Check for "GET" command	Validate input, Extract file path From buffer using sscanf(), Build full server path Add ROOT_DIR prefix,
-    // == Try to open file	Exit if not found, Get file size With fseek() and ftell(), Send "SIZE [number]"	Let client know how many bytes to expect
+    // == Try to open file	Exit if not found, Get file size With fseek() and with ftell() function, Send "SIZE [number]"	Let client know how many bytes to expect
     // == Wait for "READY" Client confirms it's ready to receive, Send file content	Chunk by chunk using fread() and send(), Close file	Finish and clean up
 
-        
     else if (strncmp(buffer, "GET", 3) == 0) {  // Check if the incoming command starts with "GET", Only the first 3 characters
         char filepath[1024];
         if (sscanf(buffer, "GET %1023s", filepath) != 1) { // Extract the requested file path from the string (e.g., GET folder/file.txt)
