@@ -31,7 +31,7 @@ void handle_client(int client_sock) {
     char buffer[BUFFER_SIZE];
     memset(buffer, 0, sizeof(buffer));
 
-    // Receive the initial command (e.g., WRITE, GET, RM)
+    // Receive the initial command  WRITE, GET, RM
     ssize_t received = recv(client_sock, buffer, sizeof(buffer), 0);
     if (received <= 0) {
         printf("Failed to receive command.\n");

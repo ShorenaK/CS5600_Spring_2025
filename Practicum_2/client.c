@@ -149,7 +149,7 @@ if (strcmp(argv[1], "WRITE") == 0 && argc == 4) {
         printf("Server response: %s\n", buffer);
     }
 
-    // ====== PART 4A: Multi-client (placeholder) ======
+    // ====== Multi-client ======
     /*
    
     */
