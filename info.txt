@@ -146,3 +146,30 @@ Verify the tar archive:
 
 
 tar -tvf userid-cs5600-s25-week3.tar
+
+
+Look at recent system messages (macOS)
+sudo dmesg | tail -n 50
+Or go to:
+
+System Settings → Privacy & Security → Developer Tools or Firewall
+
+Git hub to run through ssh :
+git remote set-url origin git@github.com:ShorenaK/OS_C_finalProject.git
+
+
+to check with repo
+git remote -v
+
+
+origin  git@github.com:ShorenaK/OS_C_finalProject.git (fetch)
+origin  git@github.com:ShorenaK/OS_C_finalProject.git (push)
+
+to remove the git 
+git -rf .git 
+
+rm -rf .git
+🔹 rm = remove
+🔹 -r = recursive (delete folders and contents)
+🔹 -f = force
+🔹 .git = the hidden folder where Git stores everything (history, config, remotes)
