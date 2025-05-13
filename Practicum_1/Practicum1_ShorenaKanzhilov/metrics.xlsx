@@ -1,4 +1,0 @@
-Replacement Policy	Total Accesses	Cache Hits	Cache Misses	Hit Ratio (%)
-LRU			1000		799		201		79.90%
-Random			1000		799		201		79.90%
-
